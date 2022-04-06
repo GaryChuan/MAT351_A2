@@ -14,16 +14,16 @@ public class UniformCubicSpline3D : MonoBehaviour
     [SerializeField] Text timerText;
 
     [Header("Spline Attributes")]
-    Vector2 initialVelocity;
-    Vector2 finalVelocity;
-    List<Vector2> points = new List<Vector2>(); 
+    Vector3 initialVelocity;
+    Vector3 finalVelocity;
+    List<Vector3> points = new List<Vector3>(); 
     
     [SerializeField] TextAsset InputFile;
     [SerializeField] TextAsset OutputFile;
 
 
     // Spline data
-    List<Vector2> data = new List<Vector2>();
+    List<Vector3> data = new List<Vector3>();
     List<Quaternion> rotations = new List<Quaternion>();
     float[,] m;
     int N;
@@ -46,7 +46,6 @@ public class UniformCubicSpline3D : MonoBehaviour
     void Start()
     {
         N = points.Count;
-        Debug.Log("N : "  + N);
         Initialize();
     }
 
@@ -59,8 +58,8 @@ public class UniformCubicSpline3D : MonoBehaviour
         {
             timer -= N - 1 ;
         }
-        Vector2 point = GeneratePoint(timer);
-        Vector2 tangent = GenerateTangent(timer);
+        Vector3 point = GeneratePoint(timer);
+        Vector3 tangent = GenerateTangent(timer);
 
         float angle = (float)Mathf.Acos(tangent.x / tangent.magnitude);
 
@@ -111,8 +110,7 @@ public class UniformCubicSpline3D : MonoBehaviour
 
         for(float t = 0f; t <= (N - 1); t += 0.01f)
         {
-            Vector2 point = GeneratePoint(t);
-            lines.Add(new Vector3(point.x, point.y, 0));
+            lines.Add(GeneratePoint(t));
         }
 
         var lineRenderer = gameObject.GetComponent<LineRenderer>();
@@ -167,9 +165,9 @@ public class UniformCubicSpline3D : MonoBehaviour
         }
     }
 
-    Vector2 GeneratePoint(float t)
+    Vector3 GeneratePoint(float t)
     {
-        Vector2 result = new Vector2();
+        Vector3 result = new Vector3();
         int ti = (int)t + 1;
 
         result = (data[ti]* (t - ti + 1)) / 6 * (((t - ti + 1) * (t - ti + 1)) - 1) +
@@ -180,9 +178,9 @@ public class UniformCubicSpline3D : MonoBehaviour
         return result;
     }
 
-    Vector2 GenerateTangent(float t)
+    Vector3 GenerateTangent(float t)
     {
-        Vector2 result = new Vector2();
+        Vector3 result = new Vector3();
         int ti = (int)t + 1;
 
         result = (data[ti] / 6) * (3 * (t - ti + 1) * (t - ti + 1) - 1) -
@@ -194,7 +192,7 @@ public class UniformCubicSpline3D : MonoBehaviour
         return result;
     }
 
-    Vector2 GenerateAcceleration(float t)
+    Vector3 GenerateAcceleration(float t)
     {
         int ti = (int)t + 1;
         return data[ti] * (t - ti + 1) + data[ti - 1] * (ti - t);
@@ -210,9 +208,10 @@ public class UniformCubicSpline3D : MonoBehaviour
         
         int vertexCount = Convert.ToInt32(vertexCountInfo);
 
-        initialVelocity = new Vector2(
+        initialVelocity = new Vector3(
             (float)Convert.ToDouble(initialVelocityInfo[0]),
-            (float)Convert.ToDouble(initialVelocityInfo[1])
+            (float)Convert.ToDouble(initialVelocityInfo[1]),
+            (float)Convert.ToDouble(initialVelocityInfo[2])
         );
 
         for(int i = 0; i < vertexCount; ++i)
@@ -220,18 +219,20 @@ public class UniformCubicSpline3D : MonoBehaviour
             var vertexInfo = inputStream.ReadLine()?.Split(' ');
 
             points.Add(
-                    new Vector2(
+                    new Vector3(
                         (float)Convert.ToDouble(vertexInfo[0]),
-                        (float)Convert.ToDouble(vertexInfo[1])
+                        (float)Convert.ToDouble(vertexInfo[1]),
+                        (float)Convert.ToDouble(vertexInfo[2])
                     )
             );
         }
 
         var finalVelocityInfo = inputStream.ReadLine()?.Split(' ');
 
-        finalVelocity = new Vector2(
+        finalVelocity = new Vector3(
             (float)Convert.ToDouble(finalVelocityInfo[0]),
-            (float)Convert.ToDouble(finalVelocityInfo[1])
+            (float)Convert.ToDouble(finalVelocityInfo[1]),
+            (float)Convert.ToDouble(finalVelocityInfo[2])
         );
     }
 }
