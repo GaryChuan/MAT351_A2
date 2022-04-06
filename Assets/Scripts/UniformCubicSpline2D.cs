@@ -30,6 +30,8 @@ public class UniformCubicSpline2D : MonoBehaviour
     
     float timer = 0;
 
+    float timeMultiplier = 1f;
+
     void Awake()
     {
         if(File.Exists(AssetDatabase.GetAssetPath(InputFile)))
@@ -42,6 +44,11 @@ public class UniformCubicSpline2D : MonoBehaviour
         }
     }
 
+    public void SetTimeMultiplier(System.Single multiplier)
+    {
+        timeMultiplier = multiplier;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -50,10 +57,20 @@ public class UniformCubicSpline2D : MonoBehaviour
         Initialize();
     }
 
+    public void Exit()
+    {
+        Application.Quit();
+    }
+
     // Update is called once per frame
     void Update()
     {
-        timer += Time.deltaTime;
+        if(timeMultiplier == 0)
+        {
+            return;
+        }
+
+        timer += Time.deltaTime * timeMultiplier;
 
         if(timer >= N - 1)
         {

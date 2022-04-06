@@ -7,7 +7,6 @@ using System.Collections.Generic;
 
 public class UniformCubicSpline3D : MonoBehaviour
 {
-
     [Header("Texts")]
     [SerializeField] Text errorText;
     [SerializeField] Text positionText;
@@ -28,7 +27,9 @@ public class UniformCubicSpline3D : MonoBehaviour
     float[,] m;
     int N;
     
-    float timer = 0;
+    float timer;
+
+    [SerializeField] float timeMultiplier = 1f;
 
     void Awake()
     {
@@ -49,10 +50,20 @@ public class UniformCubicSpline3D : MonoBehaviour
         Initialize();
     }
 
+    public void Exit()
+    {
+        Application.Quit();
+    }
+
     // Update is called once per frame
     void Update()
     {
-        timer += Time.deltaTime;
+        if(timeMultiplier == 0)
+        {
+            return;
+        }
+
+        timer += Time.deltaTime * timeMultiplier;
 
         if(timer >= N - 1)
         {
@@ -60,15 +71,66 @@ public class UniformCubicSpline3D : MonoBehaviour
         }
         Vector3 point = GeneratePoint(timer);
         Vector3 tangent = GenerateTangent(timer);
+        Vector3 acceleration = GenerateAcceleration(timer);
+        Vector3 binormal = Vector3.Cross(tangent, acceleration);
+        
+        binormal.Normalize();
 
-        float angle = (float)Mathf.Acos(tangent.x / tangent.magnitude);
+        Vector3 normal = Vector3.Cross(binormal, tangent);
+        
+        // N B T
+        Matrix4x4 a = new Matrix4x4();
 
-        angle *=  tangent.y > 0 ? 1 : -1;
+        a[0, 0] = normal.x;
+        a[1, 0] = normal.y;
+        a[2, 0] = normal.z;
 
-        gameObject.transform.rotation = Quaternion.Euler(0, 0, angle * Mathf.Rad2Deg);
+        a[0, 1] = binormal.x;
+        a[1, 1] = binormal.y;
+        a[2, 1] = binormal.z;
 
-        Debug.DrawLine(gameObject.transform.position, gameObject.transform.position + new Vector3(tangent.x, tangent.y, 0));
-        gameObject.transform.position = new Vector3(point.x , point.y , 0);
+        a[0, 2] = tangent.x;
+        a[1, 2] = tangent.y;
+        a[2, 2] = tangent.z;
+
+        Quaternion q = new Quaternion();
+        float trace = normal.x + binormal.y + tangent.z;
+       
+        if( trace > 0 ) {// I changed M_EPSILON to 0
+            float s = 0.5f / Mathf.Sqrt(trace+ 1.0f);
+            q.w = 0.25f / s;
+            q.x = ( a[2, 1] - a[1, 2] ) * s;
+            q.y = ( a[0, 2] - a[2, 0] ) * s;
+            q.z = ( a[1, 0] - a[0, 1] ) * s;
+        } 
+        else if ( a[0, 0] > a[1, 1] && a[0, 0] > a[2, 2] ) 
+        {
+            float s = 2.0f * Mathf.Sqrt( 1.0f + a[0, 0] - a[1, 1] - a[2, 2]);
+            q.w = (a[2, 1] - a[1, 2] ) / s;
+            q.x = 0.25f * s;
+            q.y = (a[0, 1] + a[1, 0] ) / s;
+            q.z = (a[0, 2] + a[2, 0] ) / s;
+        } 
+        else if (a[1, 1] > a[2, 2]) {
+            float s = 2.0f * Mathf.Sqrt( 1.0f + a[1, 1] - a[0, 0] - a[2, 2]);
+            q.w = (a[0, 2] - a[2, 0] ) / s;
+            q.x = (a[0, 1] + a[1, 0] ) / s;
+            q.y = 0.25f * s;
+            q.z = (a[1, 2] + a[2, 1] ) / s;
+        } 
+        else 
+        {
+            float s = 2.0f * Mathf.Sqrt( 1.0f + a[2, 2] - a[0, 0] - a[1, 1] );
+            q.w = (a[1, 0] - a[0, 1] ) / s;
+            q.x = (a[0, 2] + a[2, 0] ) / s;
+            q.y = (a[1, 2] + a[2, 1] ) / s;
+            q.z = 0.25f * s;
+        }
+
+        transform.rotation = q;
+
+        // Debug.DrawLine(gameObject.transform.position, gameObject.transform.position + new Vector3(tangent.x, tangent.y, 0));
+        gameObject.transform.position = point;
     }
 
     void Initialize()
@@ -234,5 +296,10 @@ public class UniformCubicSpline3D : MonoBehaviour
             (float)Convert.ToDouble(finalVelocityInfo[1]),
             (float)Convert.ToDouble(finalVelocityInfo[2])
         );
+    }
+
+    public void SetTimeMultiplier(System.Single multiplier)
+    {
+        timeMultiplier = multiplier;
     }
 }
