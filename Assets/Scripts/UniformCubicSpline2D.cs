@@ -1,25 +1,15 @@
 using System;
 using System.IO;
 using UnityEngine;
-using UnityEditor;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
 public class UniformCubicSpline2D : MonoBehaviour
 {
-
-    [Header("Texts")]
-    [SerializeField] Text errorText;
-    [SerializeField] Text positionText;
-    [SerializeField] Text timerText;
-
     [Header("Spline Attributes")]
     Vector2 initialVelocity;
     Vector2 finalVelocity;
-    List<Vector2> points = new List<Vector2>(); 
-    
-    [SerializeField] TextAsset InputFile;
-    [SerializeField] TextAsset OutputFile;
+    List<Vector2> points = new List<Vector2>();
 
 
     // Spline data
@@ -34,7 +24,7 @@ public class UniformCubicSpline2D : MonoBehaviour
 
     void Awake()
     {
-        if(File.Exists(AssetDatabase.GetAssetPath(InputFile)))
+        if(File.Exists(Application.dataPath + "/sample.txt"))
         {
             Load();
         }
@@ -219,9 +209,8 @@ public class UniformCubicSpline2D : MonoBehaviour
 
     void Load()
     {
-        StreamReader inputStream = File.OpenText(AssetDatabase.GetAssetPath(InputFile));
+        StreamReader inputStream = File.OpenText(Application.dataPath + "/sample.txt");
 
-        Debug.Log("InputFile: " + InputFile.ToString());
         var vertexCountInfo = inputStream.ReadLine();
         var initialVelocityInfo = inputStream.ReadLine()?.Split(' ');
         
