@@ -6,11 +6,6 @@ using System.Collections.Generic;
 
 public class UniformCubicSpline3D : MonoBehaviour
 {
-    [Header("Texts")]
-    [SerializeField] Text errorText;
-    [SerializeField] Text positionText;
-    [SerializeField] Text timerText;
-
     [Header("Spline Attributes")]
     Vector3 initialVelocity;
     Vector3 finalVelocity;
@@ -19,6 +14,9 @@ public class UniformCubicSpline3D : MonoBehaviour
     [SerializeField] TextAsset InputFile;
     [SerializeField] TextAsset OutputFile;
 
+
+    [Header("Points")]
+    [SerializeField] GameObject Point3DPrefab;
 
     // Spline data
     List<Vector3> data = new List<Vector3>();
@@ -47,6 +45,12 @@ public class UniformCubicSpline3D : MonoBehaviour
     {
         N = points.Count;
         Initialize();
+
+        foreach(var point in points)
+        {
+            GameObject newPoint = GameObject.Instantiate(Point3DPrefab);
+            newPoint.transform.position = point;
+        }
     }
 
     public void Exit()

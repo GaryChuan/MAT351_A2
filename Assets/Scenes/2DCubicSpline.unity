@@ -193,9 +193,9 @@ RectTransform:
   m_Father: {fileID: 1355857704}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -400, y: 175}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 150, y: -96}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &243901749
@@ -293,9 +293,9 @@ RectTransform:
   m_Father: {fileID: 1355857704}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -400, y: 200}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 150, y: -71}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &482071617
@@ -532,9 +532,9 @@ RectTransform:
   m_Father: {fileID: 1355857704}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -400, y: -225}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 150, y: 46}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &918176908
@@ -676,11 +676,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 224c12c456a66ea4dae88822207da5f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  errorText: {fileID: 0}
-  positionText: {fileID: 0}
-  timerText: {fileID: 0}
-  InputFile: {fileID: 4900000, guid: 5b04505d8a35100469cf2205c990c665, type: 3}
-  OutputFile: {fileID: 0}
+  Point2DPrefab: {fileID: 7585725692919226101, guid: 465f1798ffa6f904cad06a5039828298, type: 3}
 --- !u!120 &988350989
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -1088,8 +1084,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 496227a189bee5c4c8fc9fa0678f9bc1, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 4b9662b725b975e4e889af8464df185d, type: 3}
+  m_Color: {r: 1, g: 0.3998581, b: 0.0141509175, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

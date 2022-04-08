@@ -11,6 +11,8 @@ public class UniformCubicSpline2D : MonoBehaviour
     Vector2 finalVelocity;
     List<Vector2> points = new List<Vector2>();
 
+    [Header("Points")]
+    [SerializeField] GameObject Point2DPrefab;
 
     // Spline data
     List<Vector2> data = new List<Vector2>();
@@ -45,6 +47,12 @@ public class UniformCubicSpline2D : MonoBehaviour
         N = points.Count;
         Debug.Log("N : "  + N);
         Initialize();
+
+        foreach(var point in points)
+        {
+            GameObject newPoint = GameObject.Instantiate(Point2DPrefab);
+            newPoint.transform.position = new Vector3(point.x, point.y, -1f);
+        }
     }
 
     public void Exit()
@@ -76,7 +84,7 @@ public class UniformCubicSpline2D : MonoBehaviour
         gameObject.transform.rotation = Quaternion.Euler(0, 0, angle * Mathf.Rad2Deg);
 
         Debug.DrawLine(gameObject.transform.position, gameObject.transform.position + new Vector3(tangent.x, tangent.y, 0));
-        gameObject.transform.position = new Vector3(point.x , point.y , 0);
+        gameObject.transform.position = new Vector3(point.x , point.y , -2f);
     }
 
     void Initialize()
